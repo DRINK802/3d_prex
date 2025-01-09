@@ -51,7 +51,7 @@ onMounted(() => {
   loader.load('/glb/wssy.glb', (gltf) => {
     sceneLeft.add(gltf.scene)
   })
-  loader.load('/glb/wssy.glb', (gltf) => {
+  loader.load('/glb/new.glb', (gltf) => {
     sceneRight.add(gltf.scene)
   })
 
@@ -59,17 +59,19 @@ onMounted(() => {
   const render = () => {
     requestAnimationFrame(render)
 
+
+    // 渲染右侧场景
+    renderer.setViewport(0, 0, tWidth, height)
+    renderer.setScissor(0, 0, tWidth, height)
+    renderer.setScissorTest(true)
+    renderer.render(sceneRight, camera)
+
+
     // 渲染左侧场景
-    renderer.setViewport(0, 0, width*2, height)
+    renderer.setViewport(0, 0, tWidth, height)
     renderer.setScissor(0, 0, width, height)
     renderer.setScissorTest(true)
     renderer.render(sceneLeft, camera)
-
-    // 渲染右侧场景
-    renderer.setViewport(width, 0, width*2, height)
-    renderer.setScissor(width, 0, width, height)
-    renderer.setScissorTest(true)
-    renderer.render(sceneRight, camera)
 
     controls.update()
   }
