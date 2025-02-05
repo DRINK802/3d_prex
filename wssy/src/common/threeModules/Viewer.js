@@ -1,7 +1,7 @@
 /*
  * @Description: 
  * @Author: 笙痞77
- * @Date: 2023-08-28 16:43:52
+ * @Date: 2023-08-28i 16:43:52
  * @LastEditors: 笙痞77
  * @LastEditTime: 2023-09-01 13:57:20
  */
@@ -21,14 +21,13 @@ export default class Viewer {
    */
   constructor(id) {
     Cache.enabled = true // 开启缓存
-    this.id = id
-    this.renderer = undefined
-    this.scene = undefined
-    this.camera = undefined
-    this.controls = undefined
-    this.animateEventList = []
-    this.#initViewer()
-
+    this.id = id // 将传入的场景容器id赋值给实例的id属性
+    this.renderer = undefined // 初始化渲染器属性为undefined
+    this.scene = undefined // 初始化场景属性为undefined
+    this.camera = undefined // 初始化相机属性为undefined
+    this.controls = undefined // 初始化控制器属性为undefined
+    this.animateEventList = [] // 初始化动画事件列表为空数组
+    this.#initViewer() // 调用私有方法初始化Viewer
   }
   #initViewer() {
     this.#initRenderer()
@@ -222,4 +221,4 @@ export default class Viewer {
   stopSelectEvent() {
     this.mouseEvent?.stopSelect()
   }
-} 
+}

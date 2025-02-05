@@ -36,7 +36,7 @@ onMounted(() => {
 });
 
 const init = () => {
-
+  
   // 创建一个相机
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500000);
   camera.position.set(0, 0, 5);
@@ -59,13 +59,16 @@ const init = () => {
   viewerLeft.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   viewerRight.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // 添加与现实时间同步的天光（日光）
-  const sunLightLeft = new SunLight(viewerLeft.scene);
-  const sunLightRight = new SunLight(viewerRight.scene);
+  // 添加Lights
 
-  // 添加环境光
-  viewerLeft.scene.add(sunLightLeft.light);
-  viewerRight.scene.add(sunLightLeft.light);
+  // const light = Lights.createAmbientLight();
+  // viewerLeft.scene.add(light);
+  // viewerRight.scene.add(light);
+  // // 添加环境光
+  // viewerLeft.scene.add(sunLightLeft.light);
+  // viewerRight.scene.add(sunLightLeft.light);
+  const lightsLeft = new Lights(viewerLeft);
+  const lightsRight = new Lights(viewerRight);
 
   loadModel();
 
@@ -171,7 +174,6 @@ function initRenderer() {
 function handleResize() {
   const newWidth = leftPane.value.clientWidth;
   const newHeight = container.value.clientHeight;
-  const newTWidth = container.value.clientWidth;
 
   viewerLeft.renderer.setSize(newWidth * 2, newHeight);
   camera.aspect = newWidth / newHeight;

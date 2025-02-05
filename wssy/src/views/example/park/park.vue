@@ -202,7 +202,7 @@ const onChangeTime = () => {
 /**
  * 加载人
  */
-// const loadPeople = () => {
+// const   = () => {
 //   modelLoader.loadModelToScene('/glb/ren.glb', (model) => {
 //     model.openCastShadow()
 //     model.object.position.set(13, 0, 15)
@@ -302,13 +302,13 @@ const loadwssy = () => {
     model.object.position.set(0, 0, 0)
     model.object.scale.set(0.7, 0.7, 0.7)
     model.object.name = 'wssy'
-
+m
     laboratoryBuild = model.object.clone()
     const bbox = model.getBox()
 
     labelIns.addCss2dLabel(
       {
-        x: bbox.max.x,
+        x: bbox.max.x,    
         y: bbox.max.y,
         z: bbox.max.z
       },
