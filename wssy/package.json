@@ -26,6 +26,8 @@
     "prettier": "^2.8.8",
     "proton-engine": "^5.4.5",
     "raf-manager": "^0.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
     "unplugin-auto-import": "^0.11.2",
     "unplugin-vue-components": "^0.22.4",
     "vite": "^3.0.7",
