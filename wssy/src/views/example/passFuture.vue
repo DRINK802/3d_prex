@@ -1,17 +1,25 @@
 <template>
   <div>
-    <div class="range">
-      <p>当前选择的模型编号: {{ sliderValue }}</p>
-      <input type="range" v-model="sliderValue" @input="loadModel" min="1" max="4" />
-    </div>
     <div ref="container" class="container">
       <div ref="leftPane" class="pane left-pane" id="leftPane"></div>
       <div ref="rightPane" class="pane right-pane" id="rightPane"></div>
+    </div>
+    <div class="range">
+      <Slider
+      id="timeline"
+      v-model="timelineYear" 
+      :min="2000" 
+      :max="2024"
+      :marks="historicalEvents.map(e => e.year)"
+      :tooltip="{ always: false, placement: 'bottom' }"
+    />
     </div>
   </div>
 </template>
 
 <script setup>
+import Slider from '@vueform/slider';
+import '@vueform/slider/themes/default.css' // 引入默认样式
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -20,6 +28,9 @@ import Viewer from '@/common/threeModules/Viewer';
 import ModelLoader from '@/common/threeModules/ModelLoader';
 import Lights from '@/common/threeModules/Lights';
 import SunLight from '@/common/threeModules/Lights';
+import { remove } from 'lodash';
+
+const timelineYear = ref(2010); // 初始年份
 
 const container = ref(null);
 const leftPane = ref(null);
@@ -67,15 +78,31 @@ const init = () => {
   // // 添加环境光
   // viewerLeft.scene.add(sunLightLeft.light);
   // viewerRight.scene.add(sunLightLeft.light);
-  const lightsLeft = new Lights(viewerLeft);
-  const lightsRight = new Lights(viewerRight);
+  // const lightsLeft = new Lights(viewerLeft);
+  // const lightsRight = new Lights(viewerRight);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(5, 5, 5);
+  directionalLight.castShadow = true;
+  viewerLeft.scene.add(directionalLight);
+  viewerRight.scene.add(directionalLight.clone());
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  viewerLeft.scene.add(ambientLight);
+  viewerRight.scene.add(ambientLight.clone());
+
+  // 配置阴影
+  viewerLeft.renderer.shadowMap.enabled = true;
+  viewerLeft.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  viewerRight.renderer.shadowMap.enabled = true;
+  viewerRight.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   loadModel();
 
 
   // 监听 sliderValue 的变化
-  watch(sliderValue, (newValue, oldValue) => {
+  watch(timelineYear, (newValue, oldValue) => {
     if (newValue !== oldValue) {
+      removemodel();
       loadModel();
     }
   });
@@ -105,6 +132,21 @@ const init = () => {
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize);
 };
+
+
+// 确保 marks 格式正确
+const historicalEvents = ref([
+  { year: 1950, label: '事件A' },
+  { year: 1980, label: '事件B' },
+  { year: 2020, label: '事件C' }
+]);
+
+// 事件监听方法
+const updateHistoricalModel = (value) => {
+  console.log('Selected year:', value);
+  // 加载模型的逻辑
+};
+
 
 const modelPaths = {
   1: '/glb/new.glb',
@@ -196,7 +238,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* 确保 range div 在container div 同层的顶部并且不遮盖 container div */
-.range {
+.range .slider-connects {
   position: absolute;
   top: 0;
   left: 0;
@@ -206,10 +248,23 @@ onUnmounted(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-  margin-top: 80px; /* 确保 container div 不被 range div 遮盖 */
+.slider-connects {
   display: flex;
-  height: calc(100vh - 80px); /* 减去 range div 的高度 */
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  margin-top: 0px; /* 确保 container div 不被 range div 遮盖 */
+  display: flex;
+  height: calc(100vh-0px); /* 减去 range div 的高度 */
+}
+
+.timeline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
 }
 
 .pane {
@@ -256,9 +311,27 @@ input[name="draw"] {
   z-index: 100;
 }
 
-/* 添加一些样式使滑块更美观 */
+/*添加一些样式使滑块更美观 */
 input[type="range"] {
   width: 100%;
   margin: 20px 0;
+}
+
+/* Vue 3 使用 :deep() */
+:deep(.slider-track) {
+  background-color: #ffd700;
+}
+
+:deep(.slider-handle) {
+  background-color: #ff6347;
+  border: 2px solid #fff;
+}
+
+:deep(.slider-tooltip) {
+  background-color: #008080;
+  color: #fff;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 </style>
