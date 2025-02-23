@@ -18,7 +18,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      //'@vueform/slider': '@vueform/slider/dist/slider.js',
     }
+  },
+  optimizeDeps: {
+    include: ['@vueform/slider'],
   },
   // base: './',
   build: {

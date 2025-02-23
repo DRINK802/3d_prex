@@ -1,14 +1,14 @@
 import EmptyRouterView from "@/components/RouterView/EmptyRouterView.vue"
 const routes = [
-  {
-    path: "/",
-    name: "index",
-    component: () => import('@/views/home/home.vue'),
-    meta: {
-      title: "首页",
-      activePath: "/"
-    }
-  },
+  // {
+  //   path: "/",
+  //   name: "index",
+  //   component: () => import('@/views/home/home.vue'),
+  //   meta: {
+  //     title: "首页",
+  //     activePath: "/"
+  //   }
+  // },
   // {
   //   path: "/base",
   //   component: EmptyRouterView,
@@ -123,7 +123,7 @@ const routes = [
         name: "example_passFuture",
         component: () => import("@/views/example/passFuture.vue"),
         meta: {
-          title: "过去未来",
+          title: "过去对比",
           activePath: "/example/passFuture"
         }
       },
