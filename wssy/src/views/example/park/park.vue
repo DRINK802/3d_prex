@@ -29,6 +29,7 @@ import ModelLoader from '@/common/threeModules/ModelLoader'
 import Labels from '@/common/threeModules/Labels'
 import { Water } from 'three/examples/jsm/objects/Water2'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+import { Slider } from '@vueform/slider' // 确保正确导入
 
 import gsap from 'gsap'
 

@@ -198,4 +198,20 @@ export default class DsModel {
     })
     this.isSaveMaterial = true
   }
+  // constructor(model, viewer) {
+  //   this.object = model.scene || model; // 兼容 GLTF 和 FBX
+  //   this.viewer = viewer;
+  // }
+
+  /**
+   * 释放模型资源（材质、几何体等）
+   */
+  dispose() {
+    this.object.traverse((child) => {
+      if (child.isMesh) {
+        child.geometry?.dispose();
+        child.material?.dispose();
+      }
+    });
+  }
 }

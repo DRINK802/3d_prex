@@ -1,10 +1,3 @@
-/*
- * @Description: 
- * @Author: 笙痞77
- * @Date: 2023-08-29 09:59:49
- * @LastEditors: 笙痞77
- * @LastEditTime: 2023-08-31 11:00:33
- */
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
@@ -55,5 +48,59 @@ export default class ModelLoader {
     }, (error) => {
       console.error('模型渲染报错：', error)
     })
+  }
+   /**
+   * 加载模型到场景并替换旧模型
+   * @param {string} url 模型路径
+   * @param {Function} [callback] 加载完成后的回调
+   * @param {Function} [progress] 加载进度回调
+   */
+   async loadAndReplaceModel(url, callback, progress) {
+    // 先移除旧模型
+    if (this.currentModel) {
+      this.removeCurrentModel();
+    }
+
+    // 加载新模型
+    try {
+      const model = await this.loadModel(url, progress);
+      this.currentModel = model;
+      this.scene.add(model.object);
+      callback?.(model);
+    } catch (error) {
+      console.error('模型加载失败:', error);
+    }
+  }
+
+  /**
+   * 移除当前模型
+   */
+  removeCurrentModel() {
+    if (this.currentModel) {
+      this.scene.remove(this.currentModel.object);
+      this.currentModel.dispose(); // 假设 DsModel 有 dispose 方法用于释放资源
+      this.currentModel = null;
+    }
+  }
+
+  /**
+   * 私有方法：加载模型
+   */
+  loadModel(url, progress) {
+    return new Promise((resolve, reject) => {
+      const loader = url.includes('.fbx') ? this.loaderFBX : this.loaderGLTF;
+      loader.load(
+        url,
+        (model) => {
+          resolve(new DsModel(model, this.viewer));
+        },
+        (xhr) => {
+          progress?.((xhr.loaded / xhr.total).toFixed(2));
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 }
